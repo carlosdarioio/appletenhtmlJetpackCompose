@@ -15,10 +15,9 @@ fun AppNavigation() {
     NavHost(navController = navController, startDestination = "home") {
         composable("home") { MainMenu(navController) }
         composable("suma") { EjemploSuma() }
-        /*
         composable("conversion") { EjemploConversion() }
         composable("edad") { EjemploEdad() }
-        composable("bisiesto") { EjemploBisiesto() }
+        /*composable("bisiesto") { EjemploBisiesto() }
         composable("ciclo_for") { EjemploCicloFor() }
         composable("par_impar") { EjemploParImpar() }
         composable("login") { EjemploLogin() }

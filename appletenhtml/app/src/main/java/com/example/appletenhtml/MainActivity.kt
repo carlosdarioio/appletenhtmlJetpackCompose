@@ -20,30 +20,13 @@ class MainActivity : ComponentActivity() {
         setContent {
             AppletenhtmlTheme {
                 AppNavigation()
+
             }
         }
     }
 }
 
-@Composable
-fun MainNavigation() {
-    val navController = rememberNavController()
-    NavHost(navController, startDestination = "home") {
-        composable("home") { MainMenu(navController) }
 
-
-        composable("suma") { EjemploSuma() }
-        /*composable("conversion") { EjemploConversion() }
-        composable("edad") { EjemploEdad() }
-        composable("bisiesto") { EjemploBisiesto() }
-        composable("ciclo_for") { EjemploCicloFor() }
-        composable("par_impar") { EjemploParImpar() }
-        composable("login") { EjemploLogin() }
-        composable("validacion") { EjemploValidacion() }
-        composable("crud") { EjemploCRUD() }
-        */
-    }
-}
 
 @Composable
 fun MainMenu(navController: NavHostController) {
@@ -55,9 +38,9 @@ fun MainMenu(navController: NavHostController) {
     ) {
         Text("YAA WEY...")
         Button(onClick = { navController.navigate("suma") }) { Text("1. Ejemplo de suma") }
-        /*Button(onClick = { navController.navigate("conversion") }) { Text("2. Conversión entre tipos") }
+        Button(onClick = { navController.navigate("conversion") }) { Text("2. Conversión entre tipos") }
         Button(onClick = { navController.navigate("edad") }) { Text("3. Calcular edad") }
-        Button(onClick = { navController.navigate("bisiesto") }) { Text("4. Año bisiesto") }
+        /*Button(onClick = { navController.navigate("bisiesto") }) { Text("4. Año bisiesto") }
         Button(onClick = { navController.navigate("ciclo_for") }) { Text("5. Ejemplo ciclo for") }
         Button(onClick = { navController.navigate("par_impar") }) { Text("6. Número par o impar") }
         Button(onClick = { navController.navigate("login") }) { Text("7. Login auth") }
