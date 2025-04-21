@@ -5,6 +5,7 @@ import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
+import com.appletenhtml.views.EjemploParImpar
 import com.example.appletenhtml.MainMenu
 import com.example.appletenhtml.views.*
 
@@ -17,10 +18,10 @@ fun AppNavigation() {
         composable("suma") { EjemploSuma() }
         composable("conversion") { EjemploConversion() }
         composable("edad") { EjemploEdad() }
-        /*composable("bisiesto") { EjemploBisiesto() }
+        composable("bisiesto") { EjemploBisiesto() }
         composable("ciclo_for") { EjemploCicloFor() }
         composable("par_impar") { EjemploParImpar() }
-        composable("login") { EjemploLogin() }
+        /*composable("login") { EjemploLogin() }
         composable("validacion") { EjemploValidacion() }
         composable("crud") { EjemploCRUD() }
 
