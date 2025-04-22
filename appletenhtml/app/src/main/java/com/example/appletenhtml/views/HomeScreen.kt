@@ -53,6 +53,44 @@ fun HomeScreen(navController: NavController) {
                 text = "¡Bienvenido $name $lastName!",
                 style = MaterialTheme.typography.headlineMedium
             )
+            Button(
+                onClick = {
+                    scope.launch {
+                        userPreferences.clear()
+                        navController.navigate("login") {
+                            popUpTo("home") { inclusive = true }
+                        }
+                    }
+                },
+                modifier = Modifier.padding(top = 24.dp)
+            ) {
+                Text("Cerrar sesión")
+            }
+            val examples = listOf(
+                "1. Ejemplo de suma" to "suma",
+                "2. Conversión Int/String/Float" to "conversion",
+                "3. Calcular edad" to "edad",
+                "4. Año bisiesto" to "bisiesto",
+                "5. Ciclo for" to "ciclo",
+                "6. Par o impar" to "parimpar",
+                "7. Login auth" to "login",
+                "8. CRUD con API" to "crud"
+            )
+
+            Spacer(modifier = Modifier.height(24.dp))
+
+            examples.forEach { (title, route) ->
+                Button(
+                    onClick = { navController.navigate(route) },
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(vertical = 4.dp)
+                ) {
+                    Text(title)
+                }
+            }
+
+
         }
     }
 }

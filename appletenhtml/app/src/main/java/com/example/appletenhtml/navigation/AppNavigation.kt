@@ -29,7 +29,6 @@ fun AppNavigation() {
 
 
         /*
-        composable("validacion") { EjemploValidacion() }
         composable("crud") { EjemploCRUD() }
 
          */
