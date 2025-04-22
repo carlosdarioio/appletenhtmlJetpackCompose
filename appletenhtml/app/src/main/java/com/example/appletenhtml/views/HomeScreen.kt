@@ -19,7 +19,7 @@ fun HomeScreen(navController: NavController) {
     val userPreferences = remember { UserPreferences(context) }
 
     var name by remember { mutableStateOf<String?>(null) }
-    var lastName by remember { mutableStateOf<String?>(null) }
+    var email by remember { mutableStateOf<String?>(null) }
     var token by remember { mutableStateOf<String?>(null) }
 
     val scope = rememberCoroutineScope()
@@ -34,7 +34,7 @@ fun HomeScreen(navController: NavController) {
                     }
                 } else {
                     name = user.name
-                    lastName = user.lastName
+                    email = user.email
                 }
             }
         }
@@ -46,11 +46,11 @@ fun HomeScreen(navController: NavController) {
             .padding(24.dp),
         verticalArrangement = Arrangement.Center
     ) {
-        if (name == null || lastName == null || name == "" || lastName == "") {
+        if (name == null || email == null || name == "" || email == "") {
             CircularProgressIndicator()
         } else {
             Text(
-                text = "¡Bienvenido $name $lastName!",
+                text = "¡Bienvenido $name ( $email )!",
                 style = MaterialTheme.typography.headlineMedium
             )
             Button(
@@ -71,8 +71,8 @@ fun HomeScreen(navController: NavController) {
                 "2. Conversión Int/String/Float" to "conversion",
                 "3. Calcular edad" to "edad",
                 "4. Año bisiesto" to "bisiesto",
-                "5. Ciclo for" to "ciclo",
-                "6. Par o impar" to "parimpar",
+                "5. Ciclo for" to "ciclo_for",
+                "6. Par o impar" to "par_impar",
                 "7. Login auth" to "login",
                 "8. CRUD con API" to "crud"
             )

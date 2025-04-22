@@ -1,5 +1,6 @@
 package com.example.appletenhtml.datastore
 
+import android.R
 import android.content.Context
 import androidx.datastore.preferences.core.*
 import androidx.datastore.preferences.preferencesDataStore
@@ -14,15 +15,15 @@ class UserPreferences(private val context: Context) {
 
     companion object {
         val NAME = stringPreferencesKey("name")
-        val LAST_NAME = stringPreferencesKey("last_name")
+        val ID = stringPreferencesKey("id")
         val EMAIL = stringPreferencesKey("email")
         val TOKEN = stringPreferencesKey("token")
     }
 
-    suspend fun saveUser(name: String, lastName: String, email: String, token: String) {
+    suspend fun saveUser(name: String, id: Int, email: String, token: String) {
         context.dataStore.edit { prefs ->
             prefs[NAME] = name
-            prefs[LAST_NAME] = lastName
+            prefs[ID] = id.toString()
             prefs[EMAIL] = email
             prefs[TOKEN] = token
         }
@@ -32,7 +33,7 @@ class UserPreferences(private val context: Context) {
         return context.dataStore.data.map { prefs ->
             UserData(
                 name = prefs[NAME] ?: "",
-                lastName = prefs[LAST_NAME] ?: "",
+                id = prefs[ID] ?: "",
                 email = prefs[EMAIL] ?: "",
                 token = prefs[TOKEN] ?: ""
             )
@@ -46,7 +47,7 @@ class UserPreferences(private val context: Context) {
 
 data class UserData(
     val name: String,
-    val lastName: String,
+    val id: String,
     val email: String,
     val token: String
 )

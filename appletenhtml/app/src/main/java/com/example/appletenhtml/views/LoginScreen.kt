@@ -42,7 +42,7 @@ fun LoginScreen(navController: NavController) {
         when (uiState) {
             is LoginUiState.Success -> {
                 isLoading = false
-                val user = (uiState as LoginUiState.Success).response.user
+                val user = (uiState as LoginUiState.Success).response
                 navController.navigate("home"){popUpTo("login"){inclusive=true} }
                 viewModel.resetState()
             }

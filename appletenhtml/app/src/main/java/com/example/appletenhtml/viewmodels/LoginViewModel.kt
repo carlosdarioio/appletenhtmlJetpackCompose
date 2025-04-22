@@ -39,10 +39,10 @@ class LoginViewModel(private val userPreferences: UserPreferences) : ViewModel()
                     // Guardar datos en DataStore
                     viewModelScope.launch {
                         userPreferences.saveUser(
-                            name = loginResponse.user.name,
-                            lastName = loginResponse.user.last_name,
-                            email = loginResponse.user.email,
-                            token = loginResponse.loggin_token
+                            name = loginResponse.name,
+                            id = loginResponse.id,
+                            email = loginResponse.email,
+                            token = loginResponse.token
                         )
                     }
 
