@@ -5,16 +5,32 @@ import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.unit.dp
+import androidx.lifecycle.ViewModel
+import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
+import com.example.appletenhtml.datastore.UserPreferences
 import com.example.appletenhtml.models.User
 import com.example.appletenhtml.viewmodels.LoginUiState
 import com.example.appletenhtml.viewmodels.LoginViewModel
 
 @Composable
-fun LoginScreen(navController: NavController, viewModel: LoginViewModel = viewModel()) {
+fun LoginScreen(navController: NavController) {
+
+    val context = LocalContext.current
+    val userPreferences = remember { UserPreferences(context) }
+
+    val viewModel: LoginViewModel = viewModel(
+        factory = object : ViewModelProvider.Factory {
+            @Suppress("UNCHECKED_CAST")
+            override fun <T : ViewModel> create(modelClass: Class<T>): T {
+                return LoginViewModel(userPreferences) as T
+            }
+        })
+
     var email by rememberSaveable { mutableStateOf("") }
     var password by rememberSaveable { mutableStateOf("") }
     var error by remember { mutableStateOf<String?>(null) }
@@ -27,7 +43,7 @@ fun LoginScreen(navController: NavController, viewModel: LoginViewModel = viewMo
             is LoginUiState.Success -> {
                 isLoading = false
                 val user = (uiState as LoginUiState.Success).response.user
-                navController.navigate("home/${user.name}/${user.last_name}")
+                navController.navigate("home"){popUpTo("login"){inclusive=true} }
                 viewModel.resetState()
             }
             is LoginUiState.Error -> {

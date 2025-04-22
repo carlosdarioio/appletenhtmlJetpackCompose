@@ -17,7 +17,8 @@ fun AppNavigation() {
     val navController = rememberNavController()
 
     NavHost(navController = navController, startDestination = "home") {
-        composable("home") { MainMenu(navController) }
+        //composable("home") { MainMenu(navController) }
+        composable("home"){ HomeScreen(navController) }
         composable("suma") { EjemploSuma() }
         composable("conversion") { EjemploConversion() }
         composable("edad") { EjemploEdad() }
@@ -25,18 +26,8 @@ fun AppNavigation() {
         composable("ciclo_for") { EjemploCicloFor() }
         composable("par_impar") { EjemploParImpar() }
         composable("login") { LoginScreen(navController) }
-        //Ejemplo de login/auth
-        composable(
-            route = "home/{name}/{lastName}",
-            arguments = listOf(
-                navArgument("name") { type = NavType.StringType },
-                navArgument("lastName") { type = NavType.StringType }
-            )
-        ) { backStackEntry ->
-            val name = backStackEntry.arguments?.getString("name") ?: ""
-            val lastName = backStackEntry.arguments?.getString("lastName") ?: ""
-            HomeScreen(name = name, lastName = lastName)
-        }
+
+
         /*
         composable("validacion") { EjemploValidacion() }
         composable("crud") { EjemploCRUD() }
