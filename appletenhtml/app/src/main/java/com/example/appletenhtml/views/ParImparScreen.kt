@@ -1,68 +1,47 @@
 package com.appletenhtml.views
 
 import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.unit.dp
+import androidx.navigation.NavHostController
+import com.example.appletenhtml.ui.VistaConEstilo
 
 @Composable
-fun EjemploParImpar() {
-    var numeroInput by rememberSaveable { mutableStateOf("") }
-    var resultado by rememberSaveable { mutableStateOf<String?>(null) }
-    var error by rememberSaveable { mutableStateOf<String?>(null) }
+fun ParImparScreen(navController: NavHostController) {
+    var numero by rememberSaveable { mutableStateOf("") }
+    var resultado by rememberSaveable { mutableStateOf("") }
 
-    Column(
-        modifier = Modifier
-            .fillMaxSize()
-            .padding(16.dp),
-        verticalArrangement = Arrangement.spacedBy(12.dp)
+    VistaConEstilo (
+        titulo = "Número Par o Impar",
+        descripcionAyuda = "Determina si el número ingresado es par o impar.",
+        navController = navController
     ) {
-        Text("Número Par o Impar", style = MaterialTheme.typography.headlineSmall)
-
         OutlinedTextField(
-            value = numeroInput,
-            onValueChange = {
-                numeroInput = it
-                error = null
-            },
-            label = { Text("Ingresa un número") }
+            value = numero,
+            onValueChange = { numero = it },
+            label = { Text("Número") },
+            keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number),
+            modifier = Modifier.fillMaxWidth().padding(bottom = 8.dp)
         )
 
-        Row(horizontalArrangement = Arrangement.spacedBy(12.dp)) {
-            Button(onClick = {
-                val numero = numeroInput.toIntOrNull()
-                if (numero == null) {
-                    error = "Entrada inválida. Ingresa un número entero."
-                    resultado = null
-                } else {
-                    resultado = if (numero % 2 == 0) {
-                        "El número $numero es PAR"
-                    } else {
-                        "El número $numero es IMPAR"
-                    }
-                    error = null
-                }
-            }) {
-                Text("Verificar")
+        Button(onClick = {
+            val n = numero.toIntOrNull()
+            resultado = if (n != null) {
+                if (n % 2 == 0) "$n es par" else "$n es impar"
+            } else {
+                "Número inválido"
             }
-
-            Button(onClick = {
-                numeroInput = ""
-                resultado = null
-                error = null
-            }) {
-                Text("Limpiar")
-            }
+        }, modifier = Modifier.fillMaxWidth()) {
+            Text("Verificar")
         }
 
-        error?.let {
-            Text(text = it, color = MaterialTheme.colorScheme.error)
-        }
-
-        resultado?.let {
-            Text(text = it, style = MaterialTheme.typography.bodyLarge)
+        if (resultado.isNotBlank()) {
+            Text(resultado, style = MaterialTheme.typography.titleMedium, modifier = Modifier.padding(top = 8.dp))
         }
     }
 }

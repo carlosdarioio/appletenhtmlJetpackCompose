@@ -1,67 +1,47 @@
 package com.example.appletenhtml.views
 
 import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
+import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.unit.dp
+import androidx.navigation.NavHostController
+import com.example.appletenhtml.ui.VistaConEstilo
 
 @Composable
-fun EjemploCicloFor() {
-    var numeroInput by remember { mutableStateOf("") }
-    var tabla by remember { mutableStateOf<List<String>>(emptyList()) }
-    var error by remember { mutableStateOf<String?>(null) }
+fun TablaForScreen(navController: NavHostController) {
+    var numero by rememberSaveable { mutableStateOf("") }
+    var resultado by rememberSaveable { mutableStateOf("") }
 
-    Column(
-        modifier = Modifier
-            .fillMaxSize()
-            .padding(16.dp),
-        verticalArrangement = Arrangement.spacedBy(12.dp)
+    VistaConEstilo (
+        titulo = "Tabla de Multiplicar",
+        descripcionAyuda = "Muestra la tabla del número que ingreses usando un ciclo for.",
+        navController = navController
     ) {
-        Text("Tabla de multiplicar con ciclo for", style = MaterialTheme.typography.headlineSmall)
-
         OutlinedTextField(
-            value = numeroInput,
-            onValueChange = {
-                numeroInput = it
-                error = null
-            },
-            label = { Text("Ingresa un número") }
+            value = numero,
+            onValueChange = { numero = it },
+            label = { Text("Número") },
+            keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number),
+            modifier = Modifier.fillMaxWidth().padding(bottom = 8.dp)
         )
 
-        Row(horizontalArrangement = Arrangement.spacedBy(12.dp)) {
-            Button(onClick = {
-                val numero = numeroInput.toIntOrNull()
-                if (numero == null) {
-                    error = "Entrada inválida. Ingresa un número entero."
-                    tabla = emptyList()
-                } else {
-                    val resultados = mutableListOf<String>()
-                    for (i in 1..10) {
-                        resultados.add("$numero x $i = ${numero * i}")
-                    }
-                    tabla = resultados
-                    error = null
-                }
-            }) {
-                Text("Mostrar tabla")
+        Button(onClick = {
+            val n = numero.toIntOrNull()
+            resultado = if (n != null) {
+                (1..10).joinToString("\n") { "$n x $it = ${n * it}" }
+            } else {
+                "Ingresa un número válido"
             }
-
-            Button(onClick = {
-                numeroInput = ""
-                tabla = emptyList()
-                error = null
-            }) {
-                Text("Limpiar")
-            }
+        }, modifier = Modifier.fillMaxWidth()) {
+            Text("Mostrar tabla")
         }
 
-        error?.let {
-            Text(text = it, color = MaterialTheme.colorScheme.error)
-        }
-
-        tabla.forEach { resultado ->
-            Text(text = resultado)
+        if (resultado.isNotBlank()) {
+            Text(resultado, style = MaterialTheme.typography.bodyLarge, modifier = Modifier.padding(top = 8.dp))
         }
     }
 }

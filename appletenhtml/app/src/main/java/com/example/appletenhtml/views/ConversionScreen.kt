@@ -5,9 +5,10 @@ import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
+import androidx.navigation.NavHostController
 
 @Composable
-fun EjemploConversion() {
+fun EjemploConversion(navController: NavHostController) {
     var input by remember { mutableStateOf("") }
     var intResult by remember { mutableStateOf<String?>(null) }
     var floatResult by remember { mutableStateOf<String?>(null) }

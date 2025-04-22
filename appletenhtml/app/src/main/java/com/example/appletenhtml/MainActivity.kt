@@ -12,7 +12,7 @@ import androidx.navigation.NavHostController
 import androidx.navigation.compose.*
 import com.example.appletenhtml.navigation.AppNavigation
 import com.example.appletenhtml.ui.theme.AppletenhtmlTheme
-import com.example.appletenhtml.views.EjemploSuma
+import com.example.appletenhtml.views.SumaScreen
 
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {

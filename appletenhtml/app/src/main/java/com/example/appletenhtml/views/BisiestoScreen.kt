@@ -1,65 +1,51 @@
 package com.example.appletenhtml.views
 
 import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
+import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.unit.dp
+import androidx.navigation.NavHostController
+import com.example.appletenhtml.ui.VistaConEstilo
 
 @Composable
-fun EjemploBisiesto() {
-    var yearInput by remember { mutableStateOf("") }
-    var resultado by remember { mutableStateOf<String?>(null) }
-    var error by remember { mutableStateOf<String?>(null) }
+fun BisiestoScreen(navController: NavHostController) {
+    var anio by rememberSaveable { mutableStateOf("") }
+    var resultado by rememberSaveable { mutableStateOf("") }
 
-    Column(
-        modifier = Modifier
-            .fillMaxSize()
-            .padding(16.dp),
-        verticalArrangement = Arrangement.spacedBy(12.dp)
+    VistaConEstilo (
+        titulo = "Año Bisiesto",
+        descripcionAyuda = "Verifica si un año ingresado es bisiesto.",
+        navController = navController
     ) {
-        Text("Verificar Año Bisiesto", style = MaterialTheme.typography.headlineSmall)
-
         OutlinedTextField(
-            value = yearInput,
-            onValueChange = {
-                yearInput = it
-                error = null
-            },
-            label = { Text("Ingresa un año") }
+            value = anio,
+            onValueChange = { anio = it },
+            label = { Text("Año") },
+            keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number),
+            modifier = Modifier.fillMaxWidth().padding(bottom = 8.dp)
         )
 
-        Row(horizontalArrangement = Arrangement.spacedBy(12.dp)) {
-            Button(onClick = {
-                val year = yearInput.toIntOrNull()
-
-                if (year == null || year < 0) {
-                    error = "Por favor ingresa un año válido"
-                    resultado = null
+        Button(onClick = {
+            val year = anio.toIntOrNull()
+            resultado = if (year != null) {
+                if ((year % 4 == 0 && year % 100 != 0) || year % 400 == 0) {
+                    "$year es bisiesto"
                 } else {
-                    val isLeap = (year % 4 == 0 && year % 100 != 0) || (year % 400 == 0)
-                    resultado = if (isLeap) "El año $year es bisiesto" else "El año $year no es bisiesto"
-                    error = null
+                    "$year no es bisiesto"
                 }
-            }) {
-                Text("Verificar")
+            } else {
+                "Ingresa un año válido"
             }
-
-            Button(onClick = {
-                yearInput = ""
-                resultado = null
-                error = null
-            }) {
-                Text("Limpiar")
-            }
+        }, modifier = Modifier.fillMaxWidth()) {
+            Text("Verificar")
         }
 
-        error?.let {
-            Text(text = it, color = MaterialTheme.colorScheme.error)
-        }
-
-        resultado?.let {
-            Text(text = it, style = MaterialTheme.typography.bodyLarge)
+        if (resultado.isNotBlank()) {
+            Text(resultado, style = MaterialTheme.typography.titleMedium, modifier = Modifier.padding(top = 8.dp))
         }
     }
 }
