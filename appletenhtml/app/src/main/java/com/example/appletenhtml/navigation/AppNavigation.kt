@@ -1,6 +1,8 @@
 package com.example.appletenhtml.navigation
 
 import androidx.compose.runtime.Composable
+import androidx.compose.ui.platform.LocalContext
+import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavHostController
 import androidx.navigation.NavType
 import androidx.navigation.compose.NavHost
@@ -10,7 +12,6 @@ import androidx.navigation.navArgument
 import com.appletenhtml.views.EjemploParImpar
 import com.example.appletenhtml.MainMenu
 import com.example.appletenhtml.views.*
-import com.www.appletenhtml.network.LoginApi
 
 @Composable
 fun AppNavigation() {

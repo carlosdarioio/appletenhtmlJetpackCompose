@@ -15,4 +15,11 @@ object RetrofitInstance {
             .build()
             .create(LoginApi::class.java)
     }
+    private val retrofit by lazy {
+        Retrofit.Builder()
+            .baseUrl("https://cdfn3.com/api/")
+            .addConverterFactory(GsonConverterFactory.create())
+            .build()
+    }
+    
 }
