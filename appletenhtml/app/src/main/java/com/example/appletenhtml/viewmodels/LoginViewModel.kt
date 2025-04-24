@@ -1,72 +1,63 @@
 package com.example.appletenhtml.viewmodels
 
+import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.example.appletenhtml.datastore.UserPreferences
+import com.example.appletenhtml.dataStore.DataStoreManager
 import com.example.appletenhtml.models.LoginRequest
-import com.example.appletenhtml.models.LoginResponse
-import com.example.appletenhtml.network.RetrofitInstance
-import kotlinx.coroutines.flow.MutableStateFlow
-import kotlinx.coroutines.flow.StateFlow
+import com.example.appletenhtml.models.User
+import com.example.appletenhtml.network.LoginApi
 import kotlinx.coroutines.launch
 import org.json.JSONObject
-
-sealed class LoginUiState {
-    object Idle : LoginUiState()
-    object Loading : LoginUiState()
-    data class Success(val response: LoginResponse) : LoginUiState()
-    data class Error(val message: String) : LoginUiState()
+import retrofit2.HttpException
+sealed class LoginResult {
+    data class Success(val user: User) : LoginResult()
+    data class Error(val message: String) : LoginResult()
 }
-class LoginViewModel(private val userPreferences: UserPreferences) : ViewModel() {
+class LoginViewModel(
+    private val loginApi: LoginApi,
+    private val dataStoreManager: DataStoreManager
+) : ViewModel() {
 
-//class LoginViewModel : ViewModel() {
+    var loginState = mutableStateOf<LoginResult?>(null)
+        private set
 
-    private val _uiState = MutableStateFlow<LoginUiState>(LoginUiState.Idle)
-    val uiState: StateFlow<LoginUiState> = _uiState
+    var isLoading = mutableStateOf(false)
+        private set
 
     fun login(email: String, password: String) {
-        _uiState.value = LoginUiState.Loading
-
         viewModelScope.launch {
+            isLoading.value = true
             try {
-                val request = LoginRequest(email, password)
-                val response = RetrofitInstance.api.loginUser(request)
+                val loginRequest = LoginRequest(email = email, password = password)
+                val response = loginApi.login(loginRequest)
 
-                if (response.isSuccessful && response.body() != null) {
-
-                    val loginResponse = response.body()!!
-
-                    // Guardar datos en DataStore
-                    viewModelScope.launch {
-                        userPreferences.saveUser(
-                            name = loginResponse.name,
-                            id = loginResponse.id,
-                            email = loginResponse.email,
-                            token = loginResponse.token
-                        )
-                    }
-
-                    _uiState.value = LoginUiState.Success(loginResponse)
-
+                val user = response.body()
+                if (user != null) {
+                    dataStoreManager.saveUser(
+                        id = user.id,
+                        name = user.name,
+                        email = user.email,
+                        token = user.token
+                    )
+                    loginState.value = LoginResult.Success(user)
                 } else {
-                    //val errorMessage = response.errorBody()?.string() ?: "Error desconocido"
-                    //_uiState.value = LoginUiState.Error(errorMessage)
-                    val errorJson = response.errorBody()?.string()
-                    val message = try {
-                        JSONObject(errorJson ?: "").getString("message")
-                    } catch (e: Exception) {
-                        "xError desconocido"
-                    }
-                    _uiState.value = LoginUiState.Error(message)
+                    loginState.value = LoginResult.Error("Respuesta del servidor vacía.")
                 }
 
+            } catch (e: HttpException) {
+                val errorBody = e.response()?.errorBody()?.string()
+                val message = try {
+                    JSONObject(errorBody ?: "").getString("message")
+                } catch (e: Exception) {
+                    "Error desconocido"
+                }
+                loginState.value = LoginResult.Error(message)
             } catch (e: Exception) {
-                _uiState.value = LoginUiState.Error("Error de red: ${e.message}")
+                loginState.value = LoginResult.Error("Error de red: ${e.message}")
+            } finally {
+                isLoading.value = false
             }
         }
-    }
-
-    fun resetState() {
-        _uiState.value = LoginUiState.Idle
     }
 }

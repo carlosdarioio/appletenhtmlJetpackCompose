@@ -1,9 +1,8 @@
 package com.example.appletenhtml.models
 
-data class LoginResponse(
+data class User(
     val id: Int,
-    val email: String,
     val name: String,
+    val email: String,
     val token: String
 )
-

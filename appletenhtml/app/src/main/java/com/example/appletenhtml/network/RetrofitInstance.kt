@@ -1,6 +1,6 @@
 package com.example.appletenhtml.network
 
-import com.www.appletenhtml.network.LoginApi
+import com.example.appletenhtml.network.LoginApi
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
 
