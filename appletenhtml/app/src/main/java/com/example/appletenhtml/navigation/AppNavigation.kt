@@ -1,29 +1,26 @@
 package com.example.appletenhtml.navigation
 
-import android.content.Context
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.remember
 import androidx.compose.ui.platform.LocalContext
-import androidx.lifecycle.viewmodel.compose.viewModel
-import androidx.navigation.NavHostController
-import androidx.navigation.NavType
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
-import androidx.navigation.navArgument
 import com.appletenhtml.views.ParImparScreen
-import com.example.appletenhtml.MainMenu
 import com.example.appletenhtml.dataStore.DataStoreManager
 import com.example.appletenhtml.datastore.UserPreferences
+import com.example.appletenhtml.network.CategoryApi
 import com.example.appletenhtml.network.RetrofitHelper
 import com.example.appletenhtml.viewmodels.LoginViewModel
+import com.example.appletenhtml.viewmodels.CategoryViewModel
 import com.example.appletenhtml.views.*
 import com.example.appletenhtml.network.LoginApi
-import com.example.appletenhtml.ui.CategoryListScreen
+import com.example.appletenhtml.views.CategoryListScreen
 
 @Composable
 fun AppNavigation() {
     val navController = rememberNavController()
+
 
 
     val context = LocalContext.current
@@ -33,6 +30,10 @@ fun AppNavigation() {
     val dataStoreManager = remember { DataStoreManager(context) }
 
     val loginViewModel = remember { LoginViewModel(loginApi, dataStoreManager) }
+
+    val categoryApi = RetrofitHelper.getInstance().create(CategoryApi::class.java)
+    val categoryViewModel = remember { CategoryViewModel(categoryApi) }
+
 
 
 
@@ -47,8 +48,8 @@ fun AppNavigation() {
         composable("par_impar") { ParImparScreen(navController) }
         composable("login") { LoginScreen(navController,loginViewModel) }
 
-        alola x aqui vas
-        composable("categoryList") {
+        //alola x aqui vas
+        composable("category_list") {
             CategoryListScreen(navController = navController, categoryViewModel = categoryViewModel)
         }
 
