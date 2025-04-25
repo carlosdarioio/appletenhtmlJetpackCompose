@@ -1,7 +1,9 @@
 package com.example.appletenhtml.views
 
+
 import android.widget.Toast
 import androidx.compose.foundation.Image
+import androidx.compose.foundation.layout.Box
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -11,6 +13,7 @@ import androidx.navigation.NavController
 import com.example.appletenhtml.viewmodels.CategoryViewModel
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
@@ -19,6 +22,7 @@ import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material.icons.filled.ArrowBack
 import androidx.compose.material.icons.filled.Info
 import androidx.compose.material3.Button
+import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
@@ -33,6 +37,7 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
@@ -45,38 +50,29 @@ import coil.compose.rememberAsyncImagePainter
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun CategoryEditScreen(
+fun CategoryDetailScreen(
+    categoryId: Int,
     navController: NavController,
-    id: Int,
-    viewModel: CategoryViewModel,
-    token:String
+    categoryViewModel: CategoryViewModel
 ) {
-    val context = LocalContext.current
-    val category by remember { mutableStateOf<Category?>(null) }
+    val category = remember { mutableStateOf<Category?>(null) }
 
-    var nombre by rememberSaveable { mutableStateOf("") }
-    var descripcion by rememberSaveable { mutableStateOf("") }
-
-    LaunchedEffect (id) {
-        val fetched = viewModel.getCategoryById(id)
-        fetched?.let {
-            nombre = it.nombre
-            descripcion = it.descripcion
-        }
+    LaunchedEffect(categoryId) {
+        category.value = categoryViewModel.getCategoryById(categoryId)
     }
 
     Scaffold(
         topBar = {
             TopAppBar(
-                title = { Text("Editar Categoría") },
+                title = { Text("Detalle de Categoría") },
                 navigationIcon = {
                     IconButton(onClick = { navController.popBackStack() }) {
-                        Icon(Icons.Default.ArrowBack, contentDescription = "Volver")
+                        Icon(Icons.Default.ArrowBack, contentDescription = "Atrás")
                     }
                 },
                 actions = {
                     IconButton(onClick = {
-                        Toast.makeText(context, "Editar una categoría", Toast.LENGTH_SHORT).show()
+                        // Aquí podrías abrir un diálogo explicando la vista
                     }) {
                         Icon(Icons.Default.Info, contentDescription = "Ayuda")
                     }
@@ -84,58 +80,32 @@ fun CategoryEditScreen(
             )
         }
     ) { padding ->
-        Column(
-            modifier = Modifier
-                .padding(padding)
-                .padding(16.dp)
-        ) {
-            Image(
-                painter = rememberAsyncImagePainter("https://cdfn3.com/storage/image-1.png"),
-                contentDescription = null,
+        if (category.value != null) {
+            val cat = category.value!!
+            Column(
                 modifier = Modifier
-                    .fillMaxWidth()
-                    .height(160.dp)
-            )
-
-            Spacer(modifier = Modifier.height(16.dp))
-
-            OutlinedTextField(
-                value = nombre,
-                onValueChange = { nombre = it },
-                label = { Text("Nombre") },
-                modifier = Modifier.fillMaxWidth()
-            )
-
-            OutlinedTextField(
-                value = descripcion,
-                onValueChange = { descripcion = it },
-                label = { Text("Descripción") },
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(top = 8.dp)
-            )
-
-            Button(
-                onClick = {
-                    val updatedCategory = Category(
-                        id = id,
-                        nombre = nombre,
-                        descripcion = descripcion,
-                        status = 1,
-                        createdAt = "",
-                        updatedAt = ""
-                    )
-
-                    viewModel.updateCategory(
-                        token = token,
-                        category=updatedCategory
-                    )
-                    navController.popBackStack() // Asegura volver si quieres regresar
-                },
-                modifier = Modifier.padding(top = 16.dp)
+                    .padding(padding)
+                    .padding(16.dp)
             ) {
-                Text("Actualizar")
+                Image(
+                    painter = rememberAsyncImagePainter("https://cdfn3.com/storage/image-1.png"),
+                    contentDescription = "Decoración",
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .height(180.dp)
+                )
+                Spacer(modifier = Modifier.height(16.dp))
+                Text("Nombre: ${cat.nombre}", style = MaterialTheme.typography.titleLarge)
+                Text("Descripción: ${cat.descripcion}", style = MaterialTheme.typography.bodyLarge)
+                Text("Estado: ${if (cat.status == 1) "Activo" else "Inactivo"}", style = MaterialTheme.typography.bodyMedium)
+                Text("Creado: ${cat.createdAt}", style = MaterialTheme.typography.bodySmall)
+                Text("Actualizado: ${cat.updatedAt}", style = MaterialTheme.typography.bodySmall)
+            }
+        } else {
+            Box(modifier = Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
+                CircularProgressIndicator()
             }
         }
     }
 }
+

@@ -1,7 +1,11 @@
 package com.example.appletenhtml.navigation
 
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.platform.LocalContext
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
@@ -34,6 +38,14 @@ fun AppNavigation() {
     val categoryApi = RetrofitHelper.getInstance().create(CategoryApi::class.java)
     val categoryViewModel = remember { CategoryViewModel(categoryApi) }
 
+    var token by remember { mutableStateOf("") }
+
+    LaunchedEffect (Unit) {
+        dataStoreManager.getToken().collect {
+            token = it.toString()
+        }
+    }
+
 
 
 
@@ -53,16 +65,24 @@ fun AppNavigation() {
             CategoryListScreen(navController = navController, categoryViewModel = categoryViewModel)
         }
 
-        composable("category_create") {
+        composable("category_detail/{id}") { backStackEntry ->
+            val id = backStackEntry.arguments?.getString("id")?.toIntOrNull() ?: return@composable
+            CategoryDetailScreen(id, navController, categoryViewModel)
+        }
+
+
+
+        /*composable("category_create") {
             CategoryCreateScreen(
                 navController = navController,
                 categoryViewModel = categoryViewModel,
+                token = token, // Asegúrate de que esté disponible en AppNavigation
                 dataStoreManager = dataStoreManager
             )
-        }
+        }*/
         composable("category_edit/{id}") { backStackEntry ->
             val id = backStackEntry.arguments?.getString("id")?.toIntOrNull() ?: return@composable
-            CategoryEditScreen(navController, id, categoryViewModel)
+            CategoryEditScreen(navController, id, categoryViewModel,token)
         }
 
 

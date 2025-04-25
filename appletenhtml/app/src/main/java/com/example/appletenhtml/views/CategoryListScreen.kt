@@ -17,6 +17,7 @@ import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material.icons.filled.Add
 import androidx.compose.material.icons.filled.ArrowBack
 import androidx.compose.material.icons.filled.Info
+import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Card
@@ -28,7 +29,9 @@ import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
+import androidx.compose.material3.TextButton
 import androidx.compose.material3.TopAppBar
+import androidx.compose.material3.rememberBottomSheetScaffoldState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
@@ -42,6 +45,9 @@ import coil.compose.rememberAsyncImagePainter
 import com.example.appletenhtml.models.Category
 import com.example.appletenhtml.viewmodels.CategoryViewModel
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
 
 //esta en pinares y no le conecta
@@ -54,12 +60,21 @@ fun CategoryListScreen(
     val categoryList by categoryViewModel.categories.collectAsState()
     val context = LocalContext.current
 
+    var showDialog by remember { mutableStateOf(false) }
+    var selectedCategoryId by remember { mutableStateOf<Int?>(null) }
+
+    val scaffoldState = rememberBottomSheetScaffoldState()
+    val scope = rememberCoroutineScope()
+
+
     LaunchedEffect (Unit) {
         categoryViewModel.getAllCategories()
     }
 
     Scaffold (
+        
         topBar = {
+
             TopAppBar(
                 title = { Text("Lista de Categorías") },
                 navigationIcon = {
@@ -126,21 +141,23 @@ fun CategoryListScreen(
 
                             Row {
                                 Button(
-                                    onClick = { navController.navigate("show_category/${category.id}") },
+                                    onClick = { navController.navigate("category_detail/${category.id}") },
                                     modifier = Modifier.padding(end = 8.dp)
                                 ) {
                                     Text("Ver")
                                 }
                                 Button(
-                                    onClick = { navController.navigate("edit_category/${category.id}") },
+                                    onClick = { navController.navigate("category_edit/${category.id}") },
                                     modifier = Modifier.padding(end = 8.dp)
                                 ) {
                                     Text("Editar")
                                 }
                                 Button(
                                     onClick = {
-                                        categoryViewModel.deleteCategory("token",category.id)
-                                        Toast.makeText(context, "Categoría desactivada", Toast.LENGTH_SHORT).show()
+                                    selectedCategoryId=category.id
+                                    showDialog=true
+                                    //categoryViewModel.deleteCategory("token",category.id)
+                                        //Toast.makeText(context, "Categoría desactivada", Toast.LENGTH_SHORT).show()
                                     },
                                     colors = ButtonDefaults.buttonColors(
                                         containerColor = MaterialTheme.colorScheme.error
@@ -155,4 +172,27 @@ fun CategoryListScreen(
             }
         }
     }
+    if (showDialog && selectedCategoryId != null) {
+        AlertDialog(
+            onDismissRequest = { showDialog = false },
+            title = { Text("Confirmar eliminación") },
+            text = { Text("¿Estás seguro que deseas eliminar esta categoría? Esta acción no se puede deshacer.") },
+            confirmButton = {
+                TextButton (
+                    onClick = {
+                        categoryViewModel.deleteCategory("",selectedCategoryId!!)
+                        showDialog = false
+                    }
+                ) {
+                    Text("Sí, eliminar")
+                }
+            },
+            dismissButton = {
+                TextButton(onClick = { showDialog = false }) {
+                    Text("Cancelar")
+                }
+            }
+        )
+    }
+
 }

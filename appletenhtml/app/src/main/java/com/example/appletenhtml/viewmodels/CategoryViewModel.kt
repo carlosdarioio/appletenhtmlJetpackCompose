@@ -55,23 +55,23 @@ class CategoryViewModel(private val api: CategoryApi) : ViewModel() {
             val response = api.getCategory(id)
             if (response.isSuccessful) response.body() else null
         } catch (e: Exception) {
+            e.printStackTrace()
             null
         }
     }
 
-    fun updateCategory(id: Int, category: Category, onSuccess: () -> Unit, onError: (String) -> Unit) {
+    fun updateCategory(token: String, category: Category) {
         viewModelScope.launch {
             try {
-                val response = api.updateCategory(id = id, category = category, token = "")
+                val bearerToken = "Bearer $token"
+                val response = api.updateCategory(bearerToken, category.id, category)
                 if (response.isSuccessful) {
-                    getAllCategories() // Actualiza lista
-                    onSuccess()
+                    getAllCategories()
                 } else {
-                    onError("Error al actualizar: ${response.code()}")
+                    println("Error actualizando categoría: ${response.code()}")
                 }
             } catch (e: Exception) {
                 e.printStackTrace()
-                onError("Excepción al actualizar: ${e.localizedMessage}")
             }
         }
     }

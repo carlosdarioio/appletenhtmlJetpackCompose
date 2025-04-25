@@ -35,15 +35,26 @@ fun HomeScreen(
             Text("¡Bienvenido ${user.name}!", style = MaterialTheme.typography.headlineSmall)
         } ?: Text("¡Bienvenido!", style = MaterialTheme.typography.headlineSmall)
 
+        Button(onClick = { navController.navigate("suma") }, modifier = Modifier.fillMaxWidth() )  { Text("1. Ejemplo de suma") }
         Spacer(modifier = Modifier.height(24.dp))
+        Button(onClick = { navController.navigate("edad") }, modifier = Modifier.fillMaxWidth()) { Text("3. Calcular edad") }
 
+        Spacer(modifier = Modifier.height(24.dp))
+        Button(onClick = { navController.navigate("bisiesto") }, modifier = Modifier.fillMaxWidth()) { Text("4. Año bisiesto") }
+        Spacer(modifier = Modifier.height(24.dp))
+        Button(onClick = { navController.navigate("ciclo_for") }, modifier = Modifier.fillMaxWidth()) { Text("5. Ejemplo ciclo for") }
+        Spacer(modifier = Modifier.height(24.dp))
+        Button(onClick = { navController.navigate("par_impar") }, modifier = Modifier.fillMaxWidth()) { Text("6. Número par o impar") }
+        Spacer(modifier = Modifier.height(24.dp))
+        Button(onClick = { navController.navigate("login") }, modifier = Modifier.fillMaxWidth()) { Text("7. Login auth") }
+        Spacer(modifier = Modifier.height(24.dp))
         Button(
             onClick = {
                 navController.navigate("category_list")
             },
             modifier = Modifier.fillMaxWidth()
         ) {
-            Text("Ir a Categorías")
+            Text("8. Ir a Categorías")
         }
 
         Spacer(modifier = Modifier.height(8.dp))
