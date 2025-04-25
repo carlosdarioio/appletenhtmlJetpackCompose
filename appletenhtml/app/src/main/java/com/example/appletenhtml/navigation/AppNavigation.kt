@@ -7,6 +7,7 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.platform.LocalContext
+import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
@@ -19,10 +20,12 @@ import com.example.appletenhtml.viewmodels.LoginViewModel
 import com.example.appletenhtml.viewmodels.CategoryViewModel
 import com.example.appletenhtml.views.*
 import com.example.appletenhtml.network.LoginApi
+import com.example.appletenhtml.viewmodels.ThemeViewModel
 import com.example.appletenhtml.views.CategoryListScreen
 
 @Composable
-fun AppNavigation() {
+fun AppNavigation(navController: NavHostController,
+                  themeViewModel: ThemeViewModel) {
     val navController = rememberNavController()
 
 
@@ -58,11 +61,11 @@ fun AppNavigation() {
         composable("bisiesto") { BisiestoScreen(navController) }
         composable("ciclo_for") { TablaForScreen(navController) }
         composable("par_impar") { ParImparScreen(navController) }
-        composable("login") { LoginScreen(navController,loginViewModel) }
+        composable("login") { LoginScreen(navController,loginViewModel,themeViewModel) }
 
         //alola x aqui vas
         composable("category_list") {
-            CategoryListScreen(navController = navController, categoryViewModel = categoryViewModel)
+            CategoryListScreen(navController = navController, categoryViewModel = categoryViewModel,themeViewModel)
         }
 
         composable("category_detail/{id}") { backStackEntry ->

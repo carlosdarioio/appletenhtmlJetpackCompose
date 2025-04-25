@@ -1,12 +1,19 @@
 package com.example.appletenhtml.views
 
+import android.annotation.SuppressLint
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.text.KeyboardOptions
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Add
+import androidx.compose.material.icons.filled.Build
+import androidx.compose.material.icons.filled.Close
+import androidx.compose.material.icons.filled.Delete
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.paint
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.input.PasswordVisualTransformation
@@ -21,9 +28,12 @@ import com.example.appletenhtml.models.User
 import com.example.appletenhtml.ui.VistaConEstilo
 import com.example.appletenhtml.viewmodels.LoginResult
 import com.example.appletenhtml.viewmodels.LoginViewModel
+import com.example.appletenhtml.viewmodels.ThemeViewModel
 
+
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun LoginScreen(navController: NavController, loginViewModel: LoginViewModel) {
+fun LoginScreen(navController: NavController, loginViewModel: LoginViewModel,themeviewModel: ThemeViewModel) {
     val context = LocalContext.current
 
     var email by rememberSaveable { mutableStateOf("") }
@@ -32,7 +42,23 @@ fun LoginScreen(navController: NavController, loginViewModel: LoginViewModel) {
     val loginState = loginViewModel.loginState.value
     val isLoading = loginViewModel.isLoading.value
 
-    Column(
+
+    Scaffold(
+        Modifier.padding(start = 16.dp),
+        topBar = {
+            TopAppBar(
+                title = { Text("Login") },
+                actions = {
+                    IconButton(onClick = { themeviewModel.toggleTheme() }) {
+                        Icon(
+                            imageVector = if (themeviewModel.isDarkTheme.value) Icons.Default.Add else Icons.Default.Delete,
+                            contentDescription = "Toggle Theme"
+                        )
+                    }
+                }
+            )
+        }
+    ) {padding ->Column(
         modifier = Modifier
             .fillMaxSize()
             .padding(24.dp),
@@ -87,4 +113,8 @@ fun LoginScreen(navController: NavController, loginViewModel: LoginViewModel) {
             null -> {}
         }
     }
+
+    }
+
+
 }

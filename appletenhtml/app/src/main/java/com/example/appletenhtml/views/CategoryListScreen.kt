@@ -16,6 +16,8 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material.icons.filled.Add
 import androidx.compose.material.icons.filled.ArrowBack
+import androidx.compose.material.icons.filled.CheckCircle
+import androidx.compose.material.icons.filled.Close
 import androidx.compose.material.icons.filled.Info
 import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.Button
@@ -49,13 +51,15 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
+import com.example.appletenhtml.viewmodels.ThemeViewModel
 
 //esta en pinares y no le conecta
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun CategoryListScreen(
     navController: NavHostController,
-    categoryViewModel: CategoryViewModel
+    categoryViewModel: CategoryViewModel,
+    themeViewModel: ThemeViewModel
 ) {
     val categoryList by categoryViewModel.categories.collectAsState()
     val context = LocalContext.current
@@ -72,7 +76,7 @@ fun CategoryListScreen(
     }
 
     Scaffold (
-        
+
         topBar = {
 
             TopAppBar(
@@ -82,12 +86,20 @@ fun CategoryListScreen(
                         Icon(Icons.Default.ArrowBack, contentDescription = "Volver")
                     }
                 },
+
                 actions = {
 
                     IconButton(onClick = {
                         navController.navigate("category_create")
                     }) {
                         Icon(Icons.Default.Add, contentDescription = "Crear Categoría")
+                    }
+
+                    IconButton(onClick = { themeViewModel.toggleTheme() }) {
+                        Icon(
+                            imageVector = if (themeViewModel.isDarkTheme.value) Icons.Default.Close else Icons.Default.CheckCircle,
+                            contentDescription = "Toggle Theme"
+                        )
                     }
 
                     IconButton(onClick = {

@@ -3,6 +3,7 @@ package com.example.appletenhtml
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
+import androidx.activity.viewModels
 import androidx.compose.foundation.layout.*
 import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
@@ -12,14 +13,18 @@ import androidx.navigation.NavHostController
 import androidx.navigation.compose.*
 import com.example.appletenhtml.navigation.AppNavigation
 import com.example.appletenhtml.ui.theme.AppletenhtmlTheme
+import com.example.appletenhtml.viewmodels.ThemeViewModel
 import com.example.appletenhtml.views.SumaScreen
 
 class MainActivity : ComponentActivity() {
+    private val themeViewModel: ThemeViewModel by viewModels()
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContent {
-            AppletenhtmlTheme {
-                AppNavigation()
+            val isDarkTheme = themeViewModel.isDarkTheme.value
+            AppletenhtmlTheme(darkTheme = isDarkTheme) {
+                val navController = rememberNavController()
+                AppNavigation(navController, themeViewModel)
 
             }
         }
