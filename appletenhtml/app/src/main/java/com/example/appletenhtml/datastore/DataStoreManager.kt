@@ -1,4 +1,4 @@
-package com.example.appletenhtml.dataStore
+package com.example.appletenhtml.datastore
 
 import android.content.Context
 import androidx.datastore.preferences.core.edit
@@ -7,7 +7,7 @@ import androidx.datastore.preferences.preferencesDataStore
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.Flow
 
-private val Context.dataStore by preferencesDataStore("user_prefs")
+//private val Context. by preferencesDataStore("user_prefs")
 
 class DataStoreManager(private val context: Context) {
 
@@ -28,6 +28,9 @@ class DataStoreManager(private val context: Context) {
     }
 
     fun getUserToken(): Flow<String?> {
+        return context.dataStore.data.map { it[TOKEN_KEY] }
+    }
+    fun getToken(): Flow<String?> {
         return context.dataStore.data.map { it[TOKEN_KEY] }
     }
 

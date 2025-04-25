@@ -6,8 +6,8 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
-import com.appletenhtml.views.ParImparScreen
-import com.example.appletenhtml.dataStore.DataStoreManager
+import com.example.appletenhtml.datastore.DataStoreManager
+
 import com.example.appletenhtml.datastore.UserPreferences
 import com.example.appletenhtml.network.CategoryApi
 import com.example.appletenhtml.network.RetrofitHelper
@@ -51,6 +51,14 @@ fun AppNavigation() {
         //alola x aqui vas
         composable("category_list") {
             CategoryListScreen(navController = navController, categoryViewModel = categoryViewModel)
+        }
+
+        composable("category_create") {
+            CategoryCreateScreen(
+                navController = navController,
+                categoryViewModel = categoryViewModel,
+                dataStoreManager = dataStoreManager
+            )
         }
 
 

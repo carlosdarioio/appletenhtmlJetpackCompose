@@ -2,7 +2,7 @@ package com.example.appletenhtml.viewmodels
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
-import com.example.appletenhtml.dataStore.DataStoreManager
+import com.example.appletenhtml.datastore.DataStoreManager
 import com.example.appletenhtml.network.LoginApi
 
 class LoginViewModelFactory(

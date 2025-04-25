@@ -3,7 +3,7 @@ package com.example.appletenhtml.viewmodels
 import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.example.appletenhtml.dataStore.DataStoreManager
+import com.example.appletenhtml.datastore.DataStoreManager
 import com.example.appletenhtml.models.LoginRequest
 import com.example.appletenhtml.models.User
 import com.example.appletenhtml.network.LoginApi

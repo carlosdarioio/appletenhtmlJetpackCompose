@@ -68,6 +68,13 @@ fun CategoryListScreen(
                     }
                 },
                 actions = {
+
+                    IconButton(onClick = {
+                        navController.navigate("category_create")
+                    }) {
+                        Icon(Icons.Default.Add, contentDescription = "Crear Categoría")
+                    }
+
                     IconButton(onClick = {
                         // Aquí podrías mostrar un dialog explicando el propósito de esta vista
                         Toast.makeText(context, "Aquí se muestran todas las categorías disponibles", Toast.LENGTH_LONG).show()
@@ -92,7 +99,7 @@ fun CategoryListScreen(
 
             Image(
                 painter = rememberAsyncImagePainter("https://cdfn3.com/storage/image-1.png"),
-                contentDescription = "Imagen decorativa",
+                contentDescription = "Imagen decoraetiva",
                 modifier = Modifier
                     .fillMaxWidth()
                     .height(150.dp)
@@ -132,7 +139,7 @@ fun CategoryListScreen(
                                 }
                                 Button(
                                     onClick = {
-                                        categoryViewModel.deleteCategory(category.id)
+                                        categoryViewModel.deleteCategory("token",category.id)
                                         Toast.makeText(context, "Categoría desactivada", Toast.LENGTH_SHORT).show()
                                     },
                                     colors = ButtonDefaults.buttonColors(

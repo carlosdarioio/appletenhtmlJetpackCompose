@@ -1,10 +1,9 @@
 package com.example.appletenhtml.viewmodels
 
-import androidx.compose.runtime.State
-import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.appletenhtml.models.Category
+import com.example.appletenhtml.models.CategoryRequest
 import com.example.appletenhtml.network.CategoryApi
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
@@ -32,10 +31,30 @@ class CategoryViewModel(private val api: CategoryApi) : ViewModel() {
         }
     }
 
-    fun deleteCategory(id: Int) {
+    fun createCategory(nombre: String, descripcion: String, token: String, onSuccess: () -> Unit, onError: (String) -> Unit) {
         viewModelScope.launch {
             try {
-                val response = api.deleteCategory(id)
+                //val body = mapOf("nombre" to nombre, "descripcion" to descripcion)
+                val categoryRequest = CategoryRequest(nombre = nombre, descripcion = descripcion)
+                val response = api.createCategory("Bearer $token",categoryRequest)
+                if (response.isSuccessful) {
+                    getAllCategories()
+                    onSuccess()
+                } else {
+                    val error = response.errorBody()?.string() ?: "Error desconocido"
+                    onError(error)
+                }
+            } catch (e: Exception) {
+                onError(e.message ?: "Error desconocido")
+            }
+        }
+    }
+
+
+    fun deleteCategory(token:String,id: Int) {
+        viewModelScope.launch {
+            try {
+                val response = api.deleteCategory(token="",id = id)
                 if (response.isSuccessful) {
                     getAllCategories()
                 }
