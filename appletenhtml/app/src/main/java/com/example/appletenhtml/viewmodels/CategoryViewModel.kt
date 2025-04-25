@@ -50,6 +50,33 @@ class CategoryViewModel(private val api: CategoryApi) : ViewModel() {
         }
     }
 
+    suspend fun getCategoryById(id: Int): Category? {
+        return try {
+            val response = api.getCategory(id)
+            if (response.isSuccessful) response.body() else null
+        } catch (e: Exception) {
+            null
+        }
+    }
+
+    fun updateCategory(id: Int, category: Category, onSuccess: () -> Unit, onError: (String) -> Unit) {
+        viewModelScope.launch {
+            try {
+                val response = api.updateCategory(id = id, category = category, token = "")
+                if (response.isSuccessful) {
+                    getAllCategories() // Actualiza lista
+                    onSuccess()
+                } else {
+                    onError("Error al actualizar: ${response.code()}")
+                }
+            } catch (e: Exception) {
+                e.printStackTrace()
+                onError("Excepción al actualizar: ${e.localizedMessage}")
+            }
+        }
+    }
+
+
 
     fun deleteCategory(token:String,id: Int) {
         viewModelScope.launch {

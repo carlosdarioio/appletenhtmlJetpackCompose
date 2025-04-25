@@ -60,6 +60,11 @@ fun AppNavigation() {
                 dataStoreManager = dataStoreManager
             )
         }
+        composable("category_edit/{id}") { backStackEntry ->
+            val id = backStackEntry.arguments?.getString("id")?.toIntOrNull() ?: return@composable
+            CategoryEditScreen(navController, id, categoryViewModel)
+        }
+
 
 
 
