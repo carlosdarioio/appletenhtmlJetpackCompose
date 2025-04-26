@@ -57,6 +57,14 @@ fun HomeScreen(
             Text("8. Ir a Categorías")
         }
 
+        Spacer(modifier = Modifier.height(32.dp))
+
+        Button(onClick = {
+            navController.navigate(Routes.BlogListScreen.route)
+        }) {
+            Text(text = "Ver Blogs")
+        }
+
         Spacer(modifier = Modifier.height(8.dp))
 
         Button(
