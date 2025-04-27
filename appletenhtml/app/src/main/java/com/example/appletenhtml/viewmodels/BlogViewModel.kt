@@ -40,12 +40,12 @@ class BlogViewModel(private val api: BlogApi) : ViewModel() {
 
 
                     response.body()?.let { blogResponse ->
-                        nextPageToken = blogResponse.nextPageToken
+                        nextPageToken = blogResponse.data.nextPageToken
                         currentQuery = query
 
-                        println("Blogs recibidos: ${blogResponse?.items}") // 👈 imprime los items
+                        println("Blogs recibidos: ${blogResponse.data.items}") // 👈 imprime los items
 
-                        blogs.value = blogs.value + (blogResponse.items ?: emptyList())
+                        blogs.value = blogs.value + (blogResponse.data.items ?: emptyList())
                     }
                 } else {
                     errorMessage.value = "Error cargando blogs"

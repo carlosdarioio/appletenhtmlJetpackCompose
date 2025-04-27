@@ -1,6 +1,8 @@
 package com.example.appletenhtml.models
 
 data class BlogResponse(
-    val items: List<Blog>,
-    val nextPageToken: String? = null
+    val status: Int,
+    val message: String,
+    val data: BlogData,
+
 )

@@ -20,3 +20,5 @@ interface BlogApi {
         @Path("id") id: String
     ): Response<Blog>
 }
+
+
