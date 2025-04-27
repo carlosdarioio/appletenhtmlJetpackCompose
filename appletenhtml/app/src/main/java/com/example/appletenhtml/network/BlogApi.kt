@@ -11,8 +11,8 @@ interface BlogApi {
 
     @GET("blog")
     suspend fun getBlogs(
-        @Query("q") query: String? = null,
-        @Query("pageToken") pageToken: String? = null
+        @Query("q") query: String? = "*",
+        @Query("pageToken") pageToken: String? = "*"
     ): Response<BlogResponse>
 
     @GET("blog/show/{id}")

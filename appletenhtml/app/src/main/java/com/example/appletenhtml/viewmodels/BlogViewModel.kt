@@ -18,10 +18,10 @@ class BlogViewModel(private val api: BlogApi) : ViewModel() {
     var errorMessage = mutableStateOf<String?>(null)
         private set
 
-    private var nextPageToken: String? = null
-    private var currentQuery: String? = null
+    private var nextPageToken: String? = "*"
+    private var currentQuery: String? = "*"
 
-    fun getBlogs(reset: Boolean = false, query: String? = null) {
+    fun getBlogs(reset: Boolean = false, query: String? = "*") {
         viewModelScope.launch {
             isLoading.value = true
             try {
@@ -32,10 +32,18 @@ class BlogViewModel(private val api: BlogApi) : ViewModel() {
 
                 val response = api.getBlogs(query = query ?: currentQuery, pageToken = nextPageToken)
 
+                println("Respuesta completa: ${response}") // 👈 imprime todo el response
+
+
                 if (response.isSuccessful) {
+                    println("Body: ${response.body()}") // 👈 imprime el body (los datos reales)
+
+
                     response.body()?.let { blogResponse ->
                         nextPageToken = blogResponse.nextPageToken
                         currentQuery = query
+
+                        println("Blogs recibidos: ${blogResponse?.items}") // 👈 imprime los items
 
                         blogs.value = blogs.value + (blogResponse.items ?: emptyList())
                     }

@@ -4,6 +4,9 @@ import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Close
+import androidx.compose.material.icons.filled.Home
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
@@ -23,67 +26,67 @@ fun BlogListScreen(navController: NavController, blogViewModel: BlogViewModel) {
 
     var searchQuery by remember { mutableStateOf(TextFieldValue("")) }
 
+    // Llamar a getBlogs() cuando la pantalla se compone
+    LaunchedEffect(Unit) {
+        blogViewModel.getBlogs()
+    }
+
     Scaffold(
         topBar = {
             TopAppBar(
-                title = { Text("Blog") }
+                title = { Text("Lista de Blogs") },
+                navigationIcon = {
+                    IconButton(onClick = { navController.popBackStack() }) {
+                        Icon(Icons.Default.Close, contentDescription = "Volver")
+                    }
+                }
             )
         }
-    ) { paddingValues ->
-        Column(modifier = Modifier
+    ) { padding ->
+        Box(modifier = Modifier
             .fillMaxSize()
-            .padding(paddingValues)
-            .padding(16.dp)
-        ) {
+            .padding(padding)) {
 
-            OutlinedTextField(
-                value = searchQuery,
-                onValueChange = {
-                    searchQuery = it
-                    blogViewModel.searchBlogs(it.text)
-                },
-                label = { Text("Buscar") },
-                modifier = Modifier.fillMaxWidth()
-            )
-
-            Spacer(modifier = Modifier.height(16.dp))
-
-            if (errorMessage != null) {
-                Text(
-                    text = errorMessage ?: "",
-                    color = MaterialTheme.colorScheme.error,
-                    modifier = Modifier.padding(8.dp)
-                )
-            }
-
-            LazyColumn(
-                modifier = Modifier.weight(1f)
-            ) {
-                items(blogs) { blog ->
-                    BlogItem(blog.title, blog.author.displayName, blog.author.image.url)
+            when {
+                isLoading -> {
+                    CircularProgressIndicator(
+                        modifier = Modifier.align(Alignment.Center)
+                    )
                 }
-
-                item {
-                    if (isLoading) {
-                        CircularProgressIndicator(
-                            modifier = Modifier
-                                .align(Alignment.CenterHorizontally)
-                                .padding(16.dp)
-                        )
-                    } else if (blogs.isNotEmpty()) {
-                        Button(
-                            onClick = { blogViewModel.loadMore() },
-                            modifier = Modifier
-                                .fillMaxWidth()
-                                .padding(16.dp)
-                        ) {
-                            Text("Cargar más")
+                blogs.isNotEmpty() -> {
+                    LazyColumn(
+                        contentPadding = PaddingValues(16.dp),
+                        verticalArrangement = Arrangement.spacedBy(8.dp)
+                    ) {
+                        items(blogs) { blog ->
+                            Card(
+                                modifier = Modifier
+                                    .fillMaxWidth()
+                            ) {
+                                Column(modifier = Modifier.padding(16.dp)) {
+                                    Text(
+                                        text = blog.title,
+                                        style = MaterialTheme.typography.titleMedium
+                                    )
+                                    Text(
+                                        text = "Autor: ${blog.author.displayName}",
+                                        style = MaterialTheme.typography.bodySmall
+                                    )
+                                }
+                            }
                         }
                     }
+                }
+                else -> {
+                    Text(
+                        text = "No hay blogs disponibles.",
+                        modifier = Modifier.align(Alignment.Center)
+                    )
                 }
             }
         }
     }
+
 }
 
 @Composable
