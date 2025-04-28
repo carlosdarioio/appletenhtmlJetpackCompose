@@ -1,6 +1,9 @@
 package com.example.appletenhtml.views
 
 import android.annotation.SuppressLint
+import androidx.compose.animation.AnimatedVisibility
+import androidx.compose.animation.core.tween
+import androidx.compose.animation.fadeIn
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.icons.Icons
@@ -67,32 +70,56 @@ fun LoginScreen(navController: NavController, loginViewModel: LoginViewModel,the
     ) {
         Text("Iniciar Sesión", style = MaterialTheme.typography.headlineMedium)
 
-        OutlinedTextField(
-            value = email,
-            onValueChange = { email = it },
-            label = { Text("Correo") },
-            modifier = Modifier.fillMaxWidth()
-        )
+        AnimatedVisibility (
+            visible = true,
+            enter = fadeIn(animationSpec = tween(1000))
+        ) {
+            OutlinedTextField(
+                value = email,
+                onValueChange = { email = it },
+                label = { Text("Correo") },
+                modifier = Modifier.fillMaxWidth()
+            )
+        }
 
-        OutlinedTextField(
-            value = password,
-            onValueChange = { password = it },
-            label = { Text("Contraseña") },
-            modifier = Modifier.fillMaxWidth(),
-            visualTransformation = PasswordVisualTransformation()
-        )
+
+
+        AnimatedVisibility (
+            visible = true,
+            enter = fadeIn(animationSpec = tween(1200))
+        ) {
+            OutlinedTextField(
+                value = password,
+                onValueChange = { password = it },
+                label = { Text("Contraseña") },
+                modifier = Modifier.fillMaxWidth(),
+                visualTransformation = PasswordVisualTransformation()
+            )
+
+        }
+
+
 
         Spacer(modifier = Modifier.height(16.dp))
 
-        Button(
-            onClick = {
-                loginViewModel.login(email, password)
-            },
-            enabled = !isLoading,
-            modifier = Modifier.fillMaxWidth()
+        AnimatedVisibility (
+            visible = true,
+            enter = fadeIn(animationSpec = tween(1200))
         ) {
-            Text("Iniciar Sesión")
+            Button(
+                onClick = {
+                    loginViewModel.login(email, password)
+                },
+                enabled = !isLoading,
+                modifier = Modifier.fillMaxWidth()
+            ) {
+                Text("Iniciar Sesión")
+            }
+
         }
+
+
+
 
         if (isLoading) {
             CircularProgressIndicator(modifier = Modifier.padding(top = 16.dp))

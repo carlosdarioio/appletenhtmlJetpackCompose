@@ -1,6 +1,10 @@
 package com.example.appletenhtml.views
 
 import android.widget.Toast
+import androidx.compose.animation.AnimatedVisibility
+import androidx.compose.animation.core.tween
+import androidx.compose.animation.fadeIn
+import androidx.compose.animation.slideInVertically
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -137,45 +141,52 @@ fun CategoryListScreen(
 
             LazyColumn {
                 items(categoryList) { category ->
-                    Card (
-                        modifier = Modifier
-                            .fillMaxWidth()
-                            .padding(vertical = 8.dp),
-                        elevation = CardDefaults.cardElevation(defaultElevation = 4.dp)
+                    AnimatedVisibility(
+                        visible = true,
+                        enter = slideInVertically(
+                            initialOffsetY = { it }
+                        ) + fadeIn(animationSpec = tween(1000)) // Entrada con animación
                     ) {
-                        Column(modifier = Modifier.padding(16.dp)) {
-                            Text("ID: ${category.id}", style = MaterialTheme.typography.labelSmall)
-                            Text("Nombre: ${category.nombre}", style = MaterialTheme.typography.titleMedium)
-                            Text("Descripción: ${category.descripcion}", style = MaterialTheme.typography.bodySmall)
-                            Text("Estado: ${if (category.status == 1) "Activo" else "Inactivo"}", style = MaterialTheme.typography.bodySmall)
+                        Card (
+                            modifier = Modifier
+                                .fillMaxWidth()
+                                .padding(vertical = 8.dp),
+                            elevation = CardDefaults.cardElevation(defaultElevation = 4.dp)
+                        ) {
+                            Column(modifier = Modifier.padding(16.dp)) {
+                                Text("ID: ${category.id}", style = MaterialTheme.typography.labelSmall)
+                                Text("Nombre: ${category.nombre}", style = MaterialTheme.typography.titleMedium)
+                                Text("Descripción: ${category.descripcion}", style = MaterialTheme.typography.bodySmall)
+                                Text("Estado: ${if (category.status == 1) "Activo" else "Inactivo"}", style = MaterialTheme.typography.bodySmall)
 
-                            Spacer(modifier = Modifier.height(8.dp))
+                                Spacer(modifier = Modifier.height(8.dp))
 
-                            Row {
-                                Button(
-                                    onClick = { navController.navigate("category_detail/${category.id}") },
-                                    modifier = Modifier.padding(end = 8.dp)
-                                ) {
-                                    Text("Ver")
-                                }
-                                Button(
-                                    onClick = { navController.navigate("category_edit/${category.id}") },
-                                    modifier = Modifier.padding(end = 8.dp)
-                                ) {
-                                    Text("Editar")
-                                }
-                                Button(
-                                    onClick = {
-                                    selectedCategoryId=category.id
-                                    showDialog=true
-                                    //categoryViewModel.deleteCategory("token",category.id)
-                                        //Toast.makeText(context, "Categoría desactivada", Toast.LENGTH_SHORT).show()
-                                    },
-                                    colors = ButtonDefaults.buttonColors(
-                                        containerColor = MaterialTheme.colorScheme.error
-                                    )
-                                ) {
-                                    Text("Borrar")
+                                Row {
+                                    Button(
+                                        onClick = { navController.navigate("category_detail/${category.id}") },
+                                        modifier = Modifier.padding(end = 8.dp)
+                                    ) {
+                                        Text("Ver")
+                                    }
+                                    Button(
+                                        onClick = { navController.navigate("category_edit/${category.id}") },
+                                        modifier = Modifier.padding(end = 8.dp)
+                                    ) {
+                                        Text("Editar")
+                                    }
+                                    Button(
+                                        onClick = {
+                                            selectedCategoryId=category.id
+                                            showDialog=true
+                                            //categoryViewModel.deleteCategory("token",category.id)
+                                            //Toast.makeText(context, "Categoría desactivada", Toast.LENGTH_SHORT).show()
+                                        },
+                                        colors = ButtonDefaults.buttonColors(
+                                            containerColor = MaterialTheme.colorScheme.error
+                                        )
+                                    ) {
+                                        Text("Borrar")
+                                    }
                                 }
                             }
                         }
