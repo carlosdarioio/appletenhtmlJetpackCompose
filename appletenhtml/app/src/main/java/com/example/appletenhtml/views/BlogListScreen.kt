@@ -4,6 +4,7 @@ import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
+import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Close
 import androidx.compose.material.icons.filled.Home
@@ -24,11 +25,35 @@ fun BlogListScreen(navController: NavController, blogViewModel: BlogViewModel) {
     val isLoading by blogViewModel.isLoading
     val errorMessage by blogViewModel.errorMessage
 
+    val nextPageToken = ""
+
+
     var searchQuery by remember { mutableStateOf(TextFieldValue("")) }
 
+    val listState = rememberLazyListState()
+
+
     // Llamar a getBlogs() cuando la pantalla se compone
-    LaunchedEffect(Unit) {
+    LaunchedEffect(listState ) {
         blogViewModel.getBlogs()
+        snapshotFlow { listState.layoutInfo }
+            .collect { layoutInfo ->
+                val totalItems = layoutInfo.totalItemsCount
+                val lastVisibleItem = layoutInfo.visibleItemsInfo.lastOrNull()?.index ?: 0
+
+                if (lastVisibleItem >= totalItems - 3) { // Si quedan menos de 3 para el final
+                    blogViewModel.getBlogs() // Llamar a cargar más
+                }
+            }
+        /*snapshotFlow {
+            val lastVisibleItem = listState.layoutInfo.visibleItemsInfo.lastOrNull()
+            val totalItems = listState.layoutInfo.totalItemsCount
+            lastVisibleItem?.index == totalItems - 1
+        }.collect { isAtEnd ->
+            if (isAtEnd && !isLoading && nextPageToken != null) {
+                blogViewModel.getBlogs(pageToken=nextPageToken)
+            }
+        }*/
     }
 
     Scaffold(
