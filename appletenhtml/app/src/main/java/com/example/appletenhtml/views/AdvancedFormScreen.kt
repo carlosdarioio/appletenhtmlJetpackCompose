@@ -121,13 +121,6 @@ fun AdvancedFormScreen(navController: NavController) {
                        
                     }
 
-
-
-
-
-
-
-
                 },
                 modifier = Modifier.align(Alignment.End)
             ) {

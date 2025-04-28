@@ -63,22 +63,63 @@ fun AppNavigation(navController: NavHostController,
 
     NavHost(navController = navController, startDestination = "home") {
         //composable("home") { MainMenu(navController) }
-        composable("home"){ HomeScreen(navController) }
-        composable("suma") { SumaScreen(navController) }
-        composable("conversion") { EjemploConversion(navController) }
-        composable("edad") { EdadScreen(navController) }
-        composable("bisiesto") { BisiestoScreen(navController) }
-        composable("ciclo_for") { TablaForScreen(navController) }
-        composable("par_impar") { ParImparScreen(navController) }
-        composable("login") { LoginScreen(navController,loginViewModel,themeViewModel) }
+        composable("home"){
+            MainScreen(navController) {
+                HomeScreen(navController)
+            }
+        }
+        composable("suma") {
+            MainScreen(navController) {
+                SumaScreen(navController)
+            }
+        }
+        composable("conversion") {
+            MainScreen(navController) {
+                EjemploConversion(navController)
+            }
+        }
+        composable("edad") {
+            MainScreen(navController) {
+                EdadScreen(navController)
+            }
 
-        //alola x aqui vas
+        }
+        composable("bisiesto") {
+            MainScreen(navController) {
+                BisiestoScreen(navController)
+            }
+
+        }
+        composable("ciclo_for") {
+            MainScreen(navController) {
+                TablaForScreen(navController)
+            }
+        }
+        composable("par_impar") {
+            MainScreen(navController) {
+                ParImparScreen(navController)
+            }
+        }
+        composable("login") {
+            MainScreen(navController) {
+            LoginScreen(navController,loginViewModel,themeViewModel)
+            }
+        }
+
         composable("category_list") {
-            CategoryListScreen(navController = navController, categoryViewModel = categoryViewModel,themeViewModel)
+
+            MainScreen(navController) {
+            CategoryListScreen(
+                navController = navController,
+                categoryViewModel = categoryViewModel,
+                themeViewModel
+            )
+            }
         }
 
         composable("category_detail/{id}") { backStackEntry ->
             val id = backStackEntry.arguments?.getString("id")?.toIntOrNull() ?: return@composable
+
             CategoryDetailScreen(id, navController, categoryViewModel)
         }
 
@@ -98,12 +139,16 @@ fun AppNavigation(navController: NavHostController,
         }
 
         composable("blogList") {
-            BlogListScreen(navController, blogViewModel)
+            MainScreen(navController) {
+                BlogListScreen(navController, blogViewModel)
+            }
         }
 
 
         composable("advanced_form") {
-            AdvancedFormScreen(navController)
+            MainScreen(navController) {
+                AdvancedFormScreen(navController)
+            }
         }
 
 
