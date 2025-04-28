@@ -14,7 +14,7 @@ Clona este repositorio
 bash
 Copy
 Edit
-git clone https://github.com/tu_usuario/tu_repositorio.git
+git clone https://github.com/carlosdarioio/appletenhtmlJetpackCompose
 Abre el proyecto en Android Studio
 
 Selecciona Open an existing project y elige la carpeta clonada.
