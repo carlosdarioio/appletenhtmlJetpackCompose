@@ -68,6 +68,15 @@ fun HomeScreen(
         Spacer(modifier = Modifier.height(8.dp))
 
         Button(
+            onClick = { navController.navigate("advanced_form") },
+            modifier = Modifier.fillMaxWidth()
+        ) {
+            Text("Formulario Avanzado")
+        }
+
+        Spacer(modifier = Modifier.height(8.dp))
+
+        Button(
             onClick = {
                 CoroutineScope(Dispatchers.IO).launch {
                     userPreferences.clear()

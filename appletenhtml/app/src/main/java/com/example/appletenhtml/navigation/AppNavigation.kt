@@ -102,6 +102,11 @@ fun AppNavigation(navController: NavHostController,
         }
 
 
+        composable("advanced_form") {
+            AdvancedFormScreen(navController)
+        }
+
+
 
 
         /*
